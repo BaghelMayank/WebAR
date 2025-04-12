@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>MindAR with Camera Fix</title>
+
+    <!-- Use latest version or local file -->
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.2.0/dist/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@latest/dist/mindar-image.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@latest/dist/aframe/mindar-image-aframe.prod.js"></script>
+
+    <style>
+      body { margin: 0; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <a-scene
+      mindar-image="imageTargetSrc: target.mind; autoStart: true"
+      color-space="sRGB"
+      embedded
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: true"
+      renderer="precision: mediump; antialias: true"
+    >
+      <a-assets>
+        <a-asset-item id="model" src="model.glb"></a-asset-item>
+      </a-assets>
+
+      <a-entity camera position="0 0 0" look-controls="enabled: false"></a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-gltf-model src="#model" position="0 0 0" scale="0.1 0.1 0.1"></a-gltf-model>
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
