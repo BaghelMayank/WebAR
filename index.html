@@ -6,6 +6,7 @@
 
     <!-- Load A-Frame and MindAR scripts locally -->
     <script src="./aframe.min.js"></script>
+    <script src="./aframe-extras.min.js"></script>
     <script src="./mindar-image.prod.js"></script>
     <script src="./mindar-image-aframe.prod.js"></script>
 
@@ -51,13 +52,46 @@
 
       <!-- Tracked content -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-gltf-model
-          src="#model"
-          position="0 0 0"
-          rotation="0 0 0"
-          scale="0.5 0.5 0.5"
-        ></a-gltf-model>
+        <a-gltf-model id="animatedModel" src="#model" position="0 0 0" rotation="0 0 0" scale="0.3 0.3 0.3"
+          animation-mixer></a-gltf-model>
       </a-entity>
+    </a-scene>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const model = document.querySelector("#animatedModel");
+    
+        model.addEventListener("model-loaded", () => {
+          console.log("✅ Model loaded");
+    
+          const mixerComponent = model.components["animation-mixer"];
+    
+          if (!mixerComponent) {
+            console.error("❌ animation-mixer component not found.");
+            return;
+          }
+    
+          const mixer = mixerComponent.mixer;
+          const gltfModel = mixerComponent.model;
+    
+          if (!gltfModel) {
+            console.error("❌ Model animations not found in gltfModel.");
+            return;
+          }
+    
+          const clips = gltfModel.animations;
+          console.log("🎞️ Available animation clips:", clips);
+    
+          if (clips.length > 0) {
+            mixer.clipAction(clips[0]).play();
+            console.log("▶️ Playing:", clips[0].name);
+          } else {
+            console.warn("⚠️ No animation clips found in the model.");
+          }
+        });
+      });
+    </script>
+    
     </a-scene>
   </body>
 </html>
