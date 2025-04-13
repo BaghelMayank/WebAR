@@ -2,34 +2,61 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>MindAR with Camera Fix</title>
+    <title>MindAR Image Tracking</title>
 
-    <!-- Use latest version or local file -->
-    <script src="https://cdn.jsdelivr.net/npm/aframe@1.2.0/dist/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@latest/dist/mindar-image.prod.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@latest/dist/aframe/mindar-image-aframe.prod.js"></script>
+    <!-- Load A-Frame and MindAR scripts locally -->
+    <script src="./aframe.min.js"></script>
+    <script src="./mindar-image.prod.js"></script>
+    <script src="./mindar-image-aframe.prod.js"></script>
 
     <style>
-      body { margin: 0; overflow: hidden; }
+      body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      a-scene {
+        width: 100vw !important;
+        height: 100vh !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+      }
     </style>
   </head>
+
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: target.mind; autoStart: true"
-      color-space="sRGB"
+      mindar-image="imageTargetSrc: ./targets.mind; autoStart: true;"
       embedded
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: true"
-      renderer="precision: mediump; antialias: true"
     >
+      <!-- Load assets -->
       <a-assets>
-        <a-asset-item id="model" src="model.glb"></a-asset-item>
+        <a-asset-item id="model" src="./model.glb"></a-asset-item>
       </a-assets>
 
-      <a-entity camera position="0 0 0" look-controls="enabled: false"></a-entity>
+      <!-- Ambient light so models don’t look dark -->
+      <a-entity light="type: ambient; intensity: 1"></a-entity>
 
+      <!-- Camera -->
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!-- Tracked content -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-gltf-model src="#model" position="0 0 0" scale="0.1 0.1 0.1"></a-gltf-model>
+        <a-gltf-model
+          src="#model"
+          position="0 0 0"
+          rotation="0 0 0"
+          scale="0.5 0.5 0.5"
+        ></a-gltf-model>
       </a-entity>
     </a-scene>
   </body>
